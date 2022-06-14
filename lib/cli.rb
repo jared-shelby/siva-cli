@@ -5,6 +5,7 @@ class CLI
     # initialize by providing access to animator class
     def initialize
         @animator = Animator.new
+        @animator.clear
         @customer = nil
     end
 
@@ -16,6 +17,12 @@ class CLI
     # initiate login
     def login
         @animator.clear
+        @animator.banner("SIVA Login")
+        print "Please enter your full name: "
+        name = gets.chomp
+        name = name.split(" ")
+        @customer = Customer.find_by(first_name: name[0], last_name: name[1])
+        @animator.palette("Thanks! Here are your account details:", [@customer.inspect])
         @animator.loading("Logging you in")
     end
 
@@ -27,13 +34,7 @@ class CLI
 
     def pre_login
         # display options & wait for input
-        puts ""
-        puts "------------------------------------"
-        puts "Please choose an option to continue:"
-        puts "1: Login"
-        puts "2: Quit"
-        puts "------------------------------------"
-        puts ""
+        @animator.palette("Please choose an option to continue:", ["1: Login", "2: Quit"])
 
         # store user's decision
         @user_choice = nil

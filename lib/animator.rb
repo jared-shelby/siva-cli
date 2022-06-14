@@ -2,15 +2,18 @@
 
 class Animator
     
-    # generate a banner w/ given message
+    # generate a banner w/ given message & buffer time
     def banner(message)
-        puts ""
         puts "-----------------------------------------------------------------------------"
+        sleep(0.4)
         puts "-----------------------------------------------------------------------------"
-        puts "#{message}"
+        sleep(0.4)
+        puts message
+        sleep(0.4)
         puts "-----------------------------------------------------------------------------"
+        sleep(0.4)
         puts "-----------------------------------------------------------------------------"
-        puts ""
+        sleep(1)
     end
 
     # clear screen w/ buffer time
@@ -31,6 +34,17 @@ class Animator
         print "."
         sleep(0.5)
         print "\n"
+    end
+
+    # generate a palette w/ directions (string) & user options (array of strings)
+    def palette(directions, options)
+        puts ""
+        puts "*************************************"
+        puts directions
+        puts ""
+        puts options
+        puts "*************************************"
+        puts ""
     end
 
 end
