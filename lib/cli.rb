@@ -5,6 +5,7 @@ class CLI
     # initialize by providing access to animator class
     def initialize
         @animator = Animator.new
+        @customer = nil
     end
 
     # greet user
@@ -12,25 +13,10 @@ class CLI
         @animator.banner("Welcome to SIVA, the transaction network that connects customers & merchants.")
     end
 
-    # clear screen
-    def clear
-        sleep(0.5)
-        system("clear") || system("cls")
-        sleep(0.5)
-    end
-
     # initiate login
     def login
-        self.clear
-        print "Logging you in"
-        sleep(0.5)
-        print "."
-        sleep(0.5)
-        print "."
-        sleep(0.5)
-        print ".\n"
-        sleep(1)
-        puts "Success!"
+        @animator.clear
+        @animator.loading("Logging you in")
     end
 
     # quit application
