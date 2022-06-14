@@ -1,0 +1,6 @@
+development:
+  adapter: sqlite3
+  database: db/card-network.db 
+  pool: 5
+  timeout: 5000
+  
