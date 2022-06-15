@@ -2,7 +2,7 @@
 
 class CLI
 
-    # initialize by providing access to animator class
+    # initialize w/ animator & w/o customer
     def initialize
         @animator = Animator.new
         @animator.clear
@@ -53,7 +53,7 @@ class CLI
             @user_input = gets.chomp
             puts "Your input: '#{@user_input}'."
             sleep(1)
-
+            
             if @user_input == "1"
                 @user_choice = 1
                 break
