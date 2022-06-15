@@ -8,6 +8,7 @@ class Animator
         self.typewriter(border, 0.01)
         self.typewriter(message, 0.05)
         self.typewriter(border, 0.01)
+        puts
     end
 
     # clear screen w/ buffer time
@@ -39,7 +40,6 @@ class Animator
         puts options
         puts "*************************************"
         puts ""
-        print "> "
     end
 
     # print letter by letter

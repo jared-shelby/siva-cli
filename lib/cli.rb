@@ -81,7 +81,7 @@ class CLI
         @animator.clear
         @animator.banner("New transaction")
 
-        @animator.typewriter("We'll need a few details.")
+        @animator.typewriter("We'll need a few details.", 0.05)
         puts
         print "Transaction price: $"
         price = gets.chomp.to_f.round(2)
@@ -107,12 +107,15 @@ class CLI
         @animator.palette(
             "Transaction details:", 
             [
-                "Price: #{new_transaction.price}",
+                "Price: $#{new_transaction.price}",
                 "Date: #{new_transaction.date}",
                 "Customer: #{new_transaction.customer.first_name} #{new_transaction.customer.last_name}",
                 "Merchant: #{new_transaction.merchant.name}"
             ]
         )
+
+        # prompt next action
+        
     end
 
     def settings
