@@ -149,6 +149,7 @@ class CLI
 
         # provide command palette
         action = @prompt.select("Select an action:", show_help: :always) do |menu|
+            menu.choice "Show account details", method(:account_details)
             menu.choice "Change my name", method(:change_name)
             menu.choice "Replace lost/stolen card", method(:replace_card)
             menu.choice "Delete a transaction", method(:delete_transaction)
@@ -156,6 +157,31 @@ class CLI
             menu.choice "Logout & quit application", method(:quit)
         end
         action.()
+    end
+
+    # display all account details
+    def account_details
+        # add a customer-since attribute?
+        
+        # sanitize terminal
+        self.sanitize
+
+        # display title
+        puts "All Account Details"
+
+        # display all account details
+        @animator.palette(
+            "Here's an overview of your SIVA account:", 
+            [
+                "First name: #{@customer.first_name}",
+                "Last name: #{@customer.last_name}",
+                "Card number: #{@customer.card_number}",
+                "Transactions made: #{@customer.transactions.count}",
+                "Favorite merchant: #{@customer.first_name}",
+                "Total money spent: #{@customer.first_name}",
+                "First transaction made: #{@customer.first_name}",
+            ]
+        )
     end
 
     # allows current customer to update their name across the database
@@ -166,6 +192,40 @@ class CLI
 
         # display title
         puts "Change Name for Your Account"
+
+        # show current name
+        puts "Your current name is: #{@customer.first_name} #{@customer.last_name}"
+
+        # prompt for new name
+        new_first_name = @prompt.ask("Enter new first name:") do |q|
+            q.required :true
+            q.modify :strip
+        end
+
+        new_last_name = @prompt.ask("Enter new last name:") do |q|
+            q.required :true
+            q.modify :strip
+        end
+
+        @animator.loading("Updating your account details")
+        @customer.update(first_name: new_first_name, last_name: new_last_name)
+        puts "Success! Your name has been changed."
+
+        # display new card
+        @animator.palette(
+            "New name details:", 
+            [
+                "First name: #{@customer.first_name}",
+                "Last name: #{@customer.last_name}"
+            ]
+        )
+
+        # warn user that login details have changed
+        puts "*NOTE* Your login details have now changed. Log in using your new name."
+
+        # wait for next action
+        @prompt.keypress("Press any key to go back to dashboard", quiet: true)
+        self.dashboard
     end
 
     # gives customer a new card number (w/ the minting animation)
@@ -175,6 +235,31 @@ class CLI
 
         # display title
         puts "Replace Lost or Stolen Card"
+
+        # show current card number
+        puts "Your current card number is: #{@customer.card_number}"
+
+        # generate new card
+        @animator.loading("Deactivating old card")
+        # add to blacklisted list of cards
+        @animator.loading("Minting new card")
+        new_card_number = Faker::Number.unique.number(digits: 16)
+        puts "Success! New card minted."
+        @animator.loading("Updating your account details")
+        @customer.update(card_number: new_card_number)
+        puts "Success! Your old card has been deactivated & your new card is active."
+
+        # display new card
+        @animator.palette(
+            "New card details:", 
+            [
+                "Card number: #{@customer.card_number}"
+            ]
+        )
+
+        # wait for next action
+        @prompt.keypress("Press any key to go back to dashboard", quiet: true)
+        self.dashboard
     end
 
     # gives customer a list of their transaction that they can delete them from their account (one or multiple)
