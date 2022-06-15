@@ -2,6 +2,10 @@
 
 class Animator
     
+    def initialize
+        @logos = Logos.new
+    end
+
     # generate a banner w/ given message & buffer time
     def banner(message)
         border = "-----------------------------------------------------------------------------"
@@ -13,9 +17,7 @@ class Animator
 
     # clear screen w/ buffer time
     def clear
-        sleep(0.5)
         system("clear") || system("cls")
-        sleep(0.5)
     end
 
     # display a message w/ elipses
@@ -49,6 +51,12 @@ class Animator
             sleep(speed)
         end
         print "\n"
+    end
+
+    # print logos
+    def logos
+        puts @logos.siva_logo
+        puts @logos.subtitle
     end
 
 end

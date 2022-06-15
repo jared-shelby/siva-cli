@@ -2,9 +2,9 @@ require_relative "../config/environment"
 
 #require_relative "../config/warning_suppressor"
 
-# create CLI & greet user
+# create CLI
 cli = CLI.new
+# greet user
 cli.greet
-
-# display pre-login screen
-cli.pre_login
+# display entrance options
+cli.entrance

@@ -2,37 +2,68 @@
 
 class CLI
 
-    # initialize w/ animator & w/o customer
+    # initialize w/ access to the animator, logos, & prompt
     def initialize
         @animator = Animator.new
-        @animator.clear
+        @prompt = TTY::Prompt.new
         @customer = nil
+        self.sanitize
     end
 
-    # greet user
-    def greet
-        @animator.banner("Welcome to SIVA, the transaction network that connects customers & merchants.")
-    end
-
-    # initiate login
-    def login
+    # clear terminal & display logos
+    def sanitize
+        # sanitize terminal
         @animator.clear
-        @animator.banner("SIVA Login")
-        print "Please enter your full name: "
-        name = gets.chomp
-        name = name.split(" ")
+        @animator.logos
+    end
+
+    # greet w/ logos & wait for user's acknowledgement
+    def greet
+        @animator.typewriter("Welcome to SIVA.", 0.05)
+        @prompt.keypress("Press any key to continue", quiet: true)
+    end
+
+    # provide interface prior to logging in as a customer
+    def entrance
+        action = @prompt.select("Please select an option:", show_help: :always, quiet: true) do |menu|
+            menu.choice "Login", method(:login)
+            menu.choice "Quit", method(:quit)
+        end
+        action.()
+    end
+
+    # provide login interface
+    def login
+        # display title
+        puts "Login to SIVA"
+
+        # prompt user for login details
+        name = @prompt.ask("Enter your full name:") do |q|
+            q.required :true, "Value must be provided, or type 'quit' to exit"
+        end
+
+        # exit application if necessary; otherwise, sanitize input
+        name == "quit" ? self.quit : name = name.split(" ")
+        
+        # find customer
         @customer = Customer.find_by(first_name: name[0], last_name: name[1])
+
+        # initiate login unless details are invalid
         if @customer == nil
-            puts "Error: incorrect account details."
-            sleep(1)
-            @animator.loading("Taking you back to the home screen")
-            self.pre_login
+            action = @prompt.select("Invalid login details; try again?", show_help: :always, quiet: true) do |menu|
+                menu.choice "Try logging in again", method(:login) 
+                menu.choice "Quit application", method(:quit)
+            end
+            action.()
         else
-            puts "Account found!"
-            sleep(1)
-            @animator.palette("Account details:", [@customer.inspect])
-            sleep(1)
-            @animator.clear
+            puts "Account found."
+            @animator.palette(
+                "Account details:", 
+                [
+                    "#{@customer.first_name} #{@customer.last_name}",
+                    "#{@customer.card_number}"
+                ]
+            )
             @animator.loading("Logging you in")
             self.dashboard
         end
@@ -40,71 +71,59 @@ class CLI
 
     # quit application
     def quit
-        @animator.loading("Qutting application")
+        @animator.loading("Quitting application")
         puts "Goodbye."
+        exit
     end
 
-    # takes an array of valid inputs & validates that user input is valid 
-    def validate_input(valid_inputs)
-        while true
-            user_input = gets.chomp
-            puts "Your input: '#{user_input}'."
-            sleep(1)
-            valid_inputs.include?(user_input) ? break : puts("Invalid input; please try again.")
-        end
-        user_input
-    end
-
-    # logic for command palette that preceeds customer dashboard
-    def pre_login
-        puts siva_logo
-        # display options & wait for input
-        @animator.palette("Please choose an option to continue:", ["1: Login", "2: Quit"])
-        valid_inputs = ["1", "2"]
-        actions = {"1" => method(:login), "2" => method(:quit)}
-
-        # the .() ensures the method retrieved from the hash gets executed; neat trick
-        actions[validate_input(valid_inputs)].()
-    end
-
+    # provide dashboard once customer logs in
     def dashboard
-        @animator.clear
-        @animator.banner("Welcome back, #{@customer.first_name}.")
-        @animator.palette("Please choose an option to continue:", ["1: Make a new transaction", "2: Go to account settings", "3: Logout"])
-        valid_inputs = ["1", "2", "3"]
-        actions = {"1" => method(:transact), "2" => method(:settings), "3" => method(:quit)}
+        # sanitize terminal
+        self.sanitize
 
-        actions[validate_input(valid_inputs)].()
+        # print title
+        puts "Dashboard"
+
+        # provide command palette
+        action = @prompt.select("Select an action:", show_help: :always) do |menu|
+            menu.choice "Make a new transaction", method(:transact)
+            menu.choice "Go to account settings", method(:settings)
+            menu.choice "Logout & quit application", method(:quit)
+        end
+        action.()
     end
 
-    # create a transaction
+    # provide interface for making a new transaction
     def transact
-        @animator.clear
-        @animator.banner("New transaction")
+        # sanitize terminal
+        self.sanitize
 
-        @animator.typewriter("We'll need a few details.", 0.05)
-        puts
-        print "Transaction price: $"
-        price = gets.chomp.to_f.round(2)
-        puts
-        print "Transaction date (YYYY-MM-DD): "
-        date = gets.chomp
-        puts
-        print "Merchant name: "
-        merchant = gets.chomp
-        merchant_object = Merchant.all.find_by(name: merchant)
-        if merchant_object == nil
-            # add new merchant
-            merchant = Merchant.create(name: merchant)
-        else
-            merchant = merchant_object
+        # display title
+        puts "Make a New Transaction"
+
+        # prompt customer for details
+        price = @prompt.ask("Transaction price: $") do |q|
+            q.required :true
+            q.modify :strip
+        end
+        price = price.to_f.round(2)
+
+        date = @prompt.ask("Transaction date (YYYY-MM-DD):") do |q|
+            q.required :true
+            q.modify :strip
         end
 
-        # add transaction
-        puts
+        merchant = @prompt.ask("Merchant name:") do |q|
+            q.required :true
+            q.modify :strip
+        end
+        merchant_object = Merchant.all.find_by(name: merchant)
+        merchant_object == nil ? merchant = Merchant.create(name: merchant) : merchant = merchant_object
+
+        # add transaction to database
         @animator.loading("Creating new transaction")
         new_transaction = Transaction.create(price: price, date: date, customer: @customer, merchant: merchant)
-        @animator.banner("Success! Transaction created!")
+        puts "Success! Transaction created!"
         @animator.palette(
             "Transaction details:", 
             [
@@ -115,13 +134,27 @@ class CLI
             ]
         )
 
-        # prompt next action
-
+        # wait for next action
+        @prompt.keypress("Press any key to go back to dashboard", quiet: true)
+        self.dashboard
     end
 
+    # provide interface for adjusting account settings
     def settings
-        @animator.clear
-        @animator.banner("Account Settings")
+        # sanitize terminal
+        self.sanitize
+
+        # display title
+        puts "Account Settings"
+
+        # provide command palette
+        action = @prompt.select("Select an action:", show_help: :always) do |menu|
+            menu.choice "Change my name", method(:change_name)
+            menu.choice "Replace lost/stolen card", method(:replace_card)
+            menu.choice "Go back to dashboard", method(:dashboard)
+            menu.choice "Logout & quit application", method(:quit)
+        end
+        action.()
     end
 
 end

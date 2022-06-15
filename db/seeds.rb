@@ -1,3 +1,6 @@
+# reset uniqueness
+Faker::UniqueGenerator.clear
+
 # generate a roster of 10 customers
 10.times do
     Customer.create(
@@ -19,6 +22,3 @@ end
         merchant: Merchant.all.sample
     )
 end
-
-# reset uniqueness
-Faker::UniqueGenerator.clear
