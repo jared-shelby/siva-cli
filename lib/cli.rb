@@ -57,6 +57,7 @@ class CLI
 
     # logic for command palette that preceeds customer dashboard
     def pre_login
+        puts siva_logo
         # display options & wait for input
         @animator.palette("Please choose an option to continue:", ["1: Login", "2: Quit"])
         valid_inputs = ["1", "2"]
@@ -115,7 +116,7 @@ class CLI
         )
 
         # prompt next action
-        
+
     end
 
     def settings
