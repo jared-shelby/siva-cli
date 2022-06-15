@@ -4,18 +4,10 @@ class Animator
     
     # generate a banner w/ given message & buffer time
     def banner(message)
-        puts ""
-        puts "-----------------------------------------------------------------------------"
-        sleep(0.4)
-        puts "-----------------------------------------------------------------------------"
-        sleep(0.4)
-        puts message
-        sleep(0.4)
-        puts "-----------------------------------------------------------------------------"
-        sleep(0.4)
-        puts "-----------------------------------------------------------------------------"
-        puts ""
-        sleep(1)
+        border = "-----------------------------------------------------------------------------"
+        self.typewriter(border, 0.01)
+        self.typewriter(message, 0.05)
+        self.typewriter(border, 0.01)
     end
 
     # clear screen w/ buffer time
@@ -47,6 +39,16 @@ class Animator
         puts options
         puts "*************************************"
         puts ""
+        print "> "
+    end
+
+    # print letter by letter
+    def typewriter(message, speed)
+        message.chars.each do |char|
+            print(char)
+            sleep(speed)
+        end
+        print "\n"
     end
 
 end
