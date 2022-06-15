@@ -1,7 +1,5 @@
 require_relative "../config/environment"
 
-#require_relative "../config/warning_suppressor"
-
 # create CLI
 cli = CLI.new
 # greet user

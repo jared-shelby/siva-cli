@@ -151,10 +151,27 @@ class CLI
         action = @prompt.select("Select an action:", show_help: :always) do |menu|
             menu.choice "Change my name", method(:change_name)
             menu.choice "Replace lost/stolen card", method(:replace_card)
+            menu.choice "Delete a transaction", method(:delete_transaction)
             menu.choice "Go back to dashboard", method(:dashboard)
             menu.choice "Logout & quit application", method(:quit)
         end
         action.()
+    end
+
+    # allows current customer to update their name across the database
+    # beware this also changes their login details
+    def change_name
+        
+    end
+
+    # gives customer a new card number (w/ the minting animation)
+    def replace_card
+
+    end
+
+    # gives customer a list of their transaction that they can delete them from their account (one or multiple)
+    def delete_transaction
+
     end
 
 end
