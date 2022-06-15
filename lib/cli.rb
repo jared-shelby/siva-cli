@@ -161,17 +161,29 @@ class CLI
     # allows current customer to update their name across the database
     # beware this also changes their login details
     def change_name
-        
+        # sanitize terminal
+        self.sanitize
+
+        # display title
+        puts "Change Name for Your Account"
     end
 
     # gives customer a new card number (w/ the minting animation)
     def replace_card
+        # sanitize terminal
+        self.sanitize
 
+        # display title
+        puts "Replace Lost or Stolen Card"
     end
 
     # gives customer a list of their transaction that they can delete them from their account (one or multiple)
     def delete_transaction
+        # sanitize terminal
+        self.sanitize
 
+        # display title
+        puts "Delete One or More Transactions From Your Account"
     end
 
 end
