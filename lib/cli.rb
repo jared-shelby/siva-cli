@@ -22,13 +22,23 @@ class CLI
         name = gets.chomp
         name = name.split(" ")
         @customer = Customer.find_by(first_name: name[0], last_name: name[1])
-        @animator.palette("Thanks! Here are your account details:", [@customer.inspect])
-        @animator.loading("Logging you in")
+        if @customer == nil
+            puts "Error: incorrect account details."
+            self.login
+        else
+            puts "Account found!"
+            sleep(1)
+            @animator.palette("Account details:", [@customer.inspect])
+            sleep(1)
+            @animator.clear
+            @animator.loading("Logging you in")
+            @animator.banner("Welcome back, #{@customer.first_name}.")
+        end
     end
 
     # quit application
     def quit
-        puts "Qutting application..."
+        @animator.loading("Qutting application")
         puts "Goodbye."
     end
 
