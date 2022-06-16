@@ -7,13 +7,9 @@ class Animator
         @logos = Logos.new
     end
 
-    # clear terminal
-    def clear
+    # clear terminal & display logos
+    def sanitize
         system("clear") || system("cls")
-    end
-
-    # print logos
-    def logos
         @logos.title
         @logos.subtitle
     end
@@ -31,13 +27,13 @@ class Animator
         print "\n"
     end
 
-    # print palette w/ header (string) & information (array of strings)
-    def palette(directions, options)
+    # print palette w/ head (string) & body (array of strings)
+    def palette(head, body)
         puts ""
         puts "*************************************"
-        puts directions
+        puts head
         puts ""
-        puts options
+        puts body
         puts "*************************************"
         puts ""
     end

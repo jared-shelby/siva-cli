@@ -2,19 +2,16 @@
 
 class CLI
 
-    # initialize w/ access to the animator, logos, & prompt
+    # initialize w/ animator & prompt access
     def initialize
         @animator = Animator.new
         @prompt = TTY::Prompt.new
-        @customer = nil
-        self.sanitize
-    end
 
-    # clear terminal & display logos
-    def sanitize
-        # sanitize terminal
-        @animator.clear
-        @animator.logos
+        # customer nil until logged in
+        @customer = nil
+
+        # clear terminal & display logos
+        @animator.sanitize
     end
 
     # greet w/ logos & wait for user's acknowledgement
@@ -36,7 +33,7 @@ class CLI
     # provide login interface
     def login
         # sanitize terminal
-        self.sanitize
+        @animator.sanitize
 
         # display title
         puts "Login to SIVA"
@@ -76,7 +73,7 @@ class CLI
     # create account for new customer
     def create_account
         # sanitize terminal
-        self.sanitize
+        @animator.sanitize
 
         # display title
         puts "Create a SIVA Account"
@@ -139,7 +136,7 @@ class CLI
     # provide dashboard once customer logs in
     def dashboard
         # sanitize terminal
-        self.sanitize
+        @animator.sanitize
 
         # print title
         puts "Dashboard"
@@ -156,7 +153,7 @@ class CLI
     # provide interface for making a new transaction
     def transact
         # sanitize terminal
-        self.sanitize
+        @animator.sanitize
 
         # display title
         puts "Make a New Transaction"
@@ -202,7 +199,7 @@ class CLI
     # provide interface for adjusting account settings
     def settings
         # sanitize terminal
-        self.sanitize
+        @animator.sanitize
 
         # display title
         puts "Account Settings"
@@ -225,7 +222,7 @@ class CLI
         # add a customer-since attribute?
         
         # sanitize terminal
-        self.sanitize
+        @animator.sanitize
 
         # display title
         puts "All Account Details"
@@ -252,7 +249,7 @@ class CLI
     # display merchant details
     def merchant_details
         # sanitize terminal
-        self.sanitize
+        @animator.sanitize
 
         # display title
         puts "Merchant Details"
@@ -269,7 +266,7 @@ class CLI
     # beware this also changes their login details
     def change_name
         # sanitize terminal
-        self.sanitize
+        @animator.sanitize
 
         # display title
         puts "Change Name for Your Account"
@@ -312,7 +309,7 @@ class CLI
     # gives customer a new card number (w/ the minting animation)
     def replace_card
         # sanitize terminal
-        self.sanitize
+        @animator.sanitize
 
         # display title
         puts "Replace Lost or Stolen Card"
@@ -346,7 +343,7 @@ class CLI
     # gives customer a list of their transaction that they can delete them from their account (one or multiple)
     def delete_transaction
         # sanitize terminal
-        self.sanitize
+        @animator.sanitize
 
         # display title
         puts "Delete One or More Transactions From Your Account"

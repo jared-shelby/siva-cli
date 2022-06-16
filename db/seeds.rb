@@ -1,19 +1,20 @@
 # reset uniqueness
 Faker::UniqueGenerator.clear
 
-# generate a roster of 10 customers
+# generate random customers
 10.times do
     Customer.create(
         first_name: Faker::Name.unique.first_name,
         last_name: Faker::Name.unique.last_name, 
         card_number: Faker::Number.unique.number(digits: 16)
     )
+    
     Merchant.create(
         name: Faker::Restaurant.name,
     )
 end
 
-# generate 100 transactions based on customers and merchants provided
+# generate random transactions based on customers & merchants generated
 100.times do
     Transaction.create(
         price: Faker::Number.decimal(l_digits: 2, r_digits: 2),
