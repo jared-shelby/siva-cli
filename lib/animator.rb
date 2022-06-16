@@ -66,7 +66,10 @@ class Animator
 
     # given a hash of merchants & number of times visited, display nicely 
     def display_merchants(merchants)
-        merchants.each { |name, visits| puts "* #{name}: #{visits} purchase#{"s" unless visits == 1}" }
+        merchants.each do |name, num| 
+            puts "* #{name}:"
+            puts "\t~ #{num} purchase#{"s" unless num == 1}"
+        end
     end
 
 end
