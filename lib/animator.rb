@@ -2,25 +2,23 @@
 
 class Animator
     
+    # initialize w/ logo access
     def initialize
         @logos = Logos.new
     end
 
-    # generate a banner w/ given message & buffer time
-    def banner(message)
-        border = "-----------------------------------------------------------------------------"
-        self.typewriter(border, 0.01)
-        self.typewriter(message, 0.05)
-        self.typewriter(border, 0.01)
-        puts
-    end
-
-    # clear screen w/ buffer time
+    # clear terminal
     def clear
         system("clear") || system("cls")
     end
 
-    # display a message w/ elipses
+    # print logos
+    def logos
+        @logos.title
+        @logos.subtitle
+    end
+
+    # print message w/ elipses
     def loading(message)
         print "#{message}"
         sleep(0.5)
@@ -33,7 +31,7 @@ class Animator
         print "\n"
     end
 
-    # generate a palette w/ directions (string) & user options (array of strings)
+    # print palette w/ header (string) & information (array of strings)
     def palette(directions, options)
         puts ""
         puts "*************************************"
@@ -53,18 +51,12 @@ class Animator
         print "\n"
     end
 
-    # print logos
-    def logos
-        @logos.title
-        @logos.subtitle
-    end
-
-    # given a transaction instance, print it out to be displayed in one line
+    # print transaction details
     def display_transaction(transaction)
         "#{transaction.date} -> $#{transaction.price} purchase @ #{transaction.merchant.name}"
     end
 
-    # given a hash of merchants & number of times visited, display nicely 
+    # print merchant details
     def display_merchants(merchants)
         merchants.each do |name, num| 
             puts "* #{name}:"
