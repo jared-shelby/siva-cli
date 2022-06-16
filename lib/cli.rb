@@ -116,7 +116,7 @@ class CLI
         
         # display account details
         @animator.palette(
-            "Here's an overview of your new SIVA account:", 
+            "SIVA account overview:", 
             [
                 "* First name: #{@customer.first_name}",
                 "* Last name: #{@customer.last_name}",
@@ -233,15 +233,15 @@ class CLI
 
         # display all account details
         @animator.palette(
-            "Here's an overview of your SIVA account:", 
+            "SIVA account overview:", 
             [
                 "First name: #{@customer.first_name}",
                 "Last name: #{@customer.last_name}",
                 "Card number: #{@customer.card_number}",
                 "Transactions made: #{@customer.transactions.count}",
                 "Total money spent: $#{@customer.transactions.sum(:price)}",
-                "Earliest transaction: #{@customer.transactions.minimum(:date)}",
-                "Latest transaction: #{@customer.transactions.maximum(:date)}"
+                "Oldest transaction: #{@customer.transactions.minimum(:date)}",
+                "Newest transaction: #{@customer.transactions.maximum(:date)}"
             ]
         )
         

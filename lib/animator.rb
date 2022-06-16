@@ -22,16 +22,18 @@ class Animator
             print "."
         end
         sleep(0.5)
-        print "\n"
+        puts
     end
 
     # print palette w/ head (string) & body (array of strings)
     def palette(head, body)
-        puts "\n*************************************"
+        puts
+        puts "*************************************"
         puts head
         puts ""
         puts body
-        puts "\n*************************************"
+        puts "*************************************"
+        puts
     end
 
     # print letter by letter
@@ -40,7 +42,7 @@ class Animator
             print(char)
             sleep(speed)
         end
-        print "\n"
+        puts
     end
 
     # print transaction details
@@ -50,9 +52,13 @@ class Animator
 
     # print merchant details
     def display_merchants(merchants)
-        merchants.each do |name, num| 
-            puts "* #{name}:"
-            puts "\t~ #{num} purchase#{"s" unless num == 1}"
+        if merchants.count == 0
+            puts "No details to display."
+        else
+            merchants.each do |name, num| 
+                puts "* #{name}:"
+                puts "   > #{num} purchase#{"s" unless num == 1}"
+            end
         end
     end
 
