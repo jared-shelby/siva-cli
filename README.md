@@ -18,7 +18,7 @@ The overarching purpose of _SIVA_ is to enable customers to log their transactio
 - Delete transaction :: delete one or multiple transactions from your account 
 
 ## Installation
-To install _SIVA_ on your local machine, first clone this repository and open it in your text editor. Next, install all the required dependencies: ```bundle install```. You'll then need to setup the database, optionally seeding it with random data from "Faker," a Ruby gem: ```rake db:setup```. This will create the ```card-network.db``` database and seed it with random data generated in ```seeds.rb```. If you adjust any of the tables or migrations, be sure to delete ```schema.rb``` or refresh it using ```rake db:schema:load```.
+To install _SIVA_ on your local machine, first clone this repository and open it in your text editor. Next, install all the required dependencies: ```bundle install```. You'll then need to setup the database, optionally seeding it with random data from "Faker," a Ruby gem: ```rake db:setup```. This will create the ```card-network.db``` database and seed it with random data generated in ```seeds.rb```. If you adjust any of the tables or migrations, be sure to refresh ```schema.rb```.
 
 You're then free to execute ```ruby bin/run.rb``` to run the application, create a _SIVA_ account, and use all the features outlined above. Note that your transactions will be stored locally, as the card-network database is not hosted online. Thus, you are free to play around with new users and random data from "Faker."
 
