@@ -55,7 +55,7 @@ class Animator
 
     # print logos
     def logos
-        puts @logos.siva_logo
+        puts @logos.siva2
         puts @logos.subtitle
     end
 

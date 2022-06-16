@@ -34,6 +34,9 @@ class CLI
 
     # provide login interface
     def login
+        # sanitize terminal
+        self.sanitize
+
         # display title
         puts "Login to SIVA"
 
@@ -177,11 +180,15 @@ class CLI
                 "Last name: #{@customer.last_name}",
                 "Card number: #{@customer.card_number}",
                 "Transactions made: #{@customer.transactions.count}",
-                "Favorite merchant: #{@customer.first_name}",
-                "Total money spent: #{@customer.first_name}",
-                "First transaction made: #{@customer.first_name}",
+                "Favorite merchant: #{@customer.transactions}",
+                "Total money spent: $#{@customer.transactions.sum(:price)}",
+                "First transaction made: #{@customer.transactions.minimum(:date)}",
             ]
         )
+        
+        # wait for next action
+        @prompt.keypress("Press any key to go back to dashboard", quiet: true)
+        self.dashboard
     end
 
     # allows current customer to update their name across the database
@@ -269,6 +276,10 @@ class CLI
 
         # display title
         puts "Delete One or More Transactions From Your Account"
+
+        # wait for next action
+        @prompt.keypress("Press any key to go back to dashboard", quiet: true)
+        self.dashboard
     end
 
 end
