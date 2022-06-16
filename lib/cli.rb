@@ -26,8 +26,9 @@ class CLI
     # provide interface prior to logging in as a customer
     def entrance
         action = @prompt.select("Please select an option:", show_help: :always, quiet: true) do |menu|
-            menu.choice "Login", method(:login)
-            menu.choice "Quit", method(:quit)
+            menu.choice "Login to SIVA", method(:login)
+            menu.choice "Create an account", method(:create_account)
+            menu.choice "Quit application", method(:quit)
         end
         action.()
     end
@@ -70,6 +71,62 @@ class CLI
             @animator.loading("Logging you in")
             self.dashboard
         end
+    end
+
+    # create account for new customer
+    def create_account
+        # sanitize terminal
+        self.sanitize
+
+        # display title
+        puts "Create a SIVA Account"
+
+        # prompt user for name
+        name = @prompt.ask("Enter your full name:") do |q|
+            q.required :true, "Value must be provided, or type 'quit' to exit"
+        end
+
+        # exit application if necessary; otherwise, sanitize input
+        name == "quit" ? self.quit : name = name.split(" ")
+
+        # confirm name
+        correct_name = @prompt.yes?("Your full name is '#{name[0]} #{name[1]}'. Is this correct?")
+        if correct_name == true
+            puts "Great! Now, let's get you a SIVA card."
+        else
+            puts "Sorry about that."
+            @animator.loading("Please try again")
+            self.create_account
+        end
+
+        # mint new card for new customer
+        @animator.loading("Minting SIVA card")
+        card_number = Faker::Number.unique.number(digits: 16)
+        puts "Success! New card minted."
+        @animator.loading("Creating your account")
+        
+        # create customer
+        @customer = Customer.create(first_name: name[0], last_name: name[1], card_number: card_number)
+
+        # display success message
+        puts "Success! Your account has been created!"
+        
+        # display account details
+        @animator.palette(
+            "Here's an overview of your new SIVA account:", 
+            [
+                "First name: #{@customer.first_name}",
+                "Last name: #{@customer.last_name}",
+                "Card number: #{@customer.card_number}"
+            ]
+        )
+
+        # thank you message
+        puts "Thanks for joining SIVA."
+
+        # wait for next action
+        @prompt.keypress("Press any key to go to your account dashboard", quiet: true)
+        self.dashboard
     end
 
     # quit application
@@ -151,7 +208,7 @@ class CLI
         puts "Account Settings"
 
         # provide command palette
-        action = @prompt.select("Select an action:", show_help: :always) do |menu|
+        action = @prompt.select("Select an action:", show_help: :always, per_page: 10) do |menu|
             menu.choice "Show account details", method(:account_details)
             menu.choice "See merchant details", method(:merchant_details)
             menu.choice "Change my name", method(:change_name)
@@ -296,23 +353,29 @@ class CLI
 
         # prompt user to select transactions they wish to delete from account
         # returns array of transaction ids to delete
-        transactions_to_delete = @prompt.multi_select(
-            "Choose transaction(s) to delete; scroll for more options; deselect all & press enter to cancel:", 
-            show_help: :always, per_page: 10, echo: false
-            ) do |menu|
-            @customer.transactions.order('date DESC').each do |transaction|
-                menu.choice @animator.display_transaction(transaction), transaction.id
+        flag = 0
+        transactions_to_delete = @prompt.multi_select("Choose transaction(s) to delete; scroll for more options; deselect all & press enter to cancel:", show_help: :always, per_page: 10, echo: false) do |menu|
+            if @customer.transactions.empty?
+                flag = 1
+                break
+            else
+                @customer.transactions.order('date DESC').each do |transaction|
+                    menu.choice @animator.display_transaction(transaction), transaction.id
+                end
             end
         end
 
         # delete transactions from database
-        delete_count = transactions_to_delete.count
+        delete_count = 0
+        delete_count = transactions_to_delete.count unless flag == 1
         if delete_count > 0
-            @animator.loading("Deleting #{transactions_to_delete.count} transaction#{"s" unless delete_count == 1}")
+            @animator.loading("Deleting #{delete_count} transaction#{"s" unless delete_count == 1}")
             transactions_to_delete.each do |id|
                 Transaction.delete(id)
             end
             puts "Done."
+        elsif flag == 1
+            puts "You have not made any transactions yet."
         else
             puts "None deleted."
         end
