@@ -59,4 +59,14 @@ class Animator
         puts @logos.subtitle
     end
 
+    # given a transaction instance, print it out to be displayed in one line
+    def display_transaction(transaction)
+        "#{transaction.date} -> $#{transaction.price} purchase @ #{transaction.merchant.name}"
+    end
+
+    # given a hash of merchants & number of times visited, display nicely 
+    def display_merchants(merchants)
+        merchants.each { |name, visits| puts "* #{name}: #{visits} purchase#{"s" unless visits == 1}" }
+    end
+
 end

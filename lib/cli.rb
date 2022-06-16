@@ -153,6 +153,7 @@ class CLI
         # provide command palette
         action = @prompt.select("Select an action:", show_help: :always) do |menu|
             menu.choice "Show account details", method(:account_details)
+            menu.choice "See merchant details", method(:merchant_details)
             menu.choice "Change my name", method(:change_name)
             menu.choice "Replace lost/stolen card", method(:replace_card)
             menu.choice "Delete a transaction", method(:delete_transaction)
@@ -180,15 +181,31 @@ class CLI
                 "Last name: #{@customer.last_name}",
                 "Card number: #{@customer.card_number}",
                 "Transactions made: #{@customer.transactions.count}",
-                "Favorite merchant: #{@customer.transactions}",
                 "Total money spent: $#{@customer.transactions.sum(:price)}",
-                "First transaction made: #{@customer.transactions.minimum(:date)}",
+                "Earliest transaction: #{@customer.transactions.minimum(:date)}",
+                "Latest transaction: #{@customer.transactions.maximum(:date)}"
             ]
         )
         
         # wait for next action
-        @prompt.keypress("Press any key to go back to dashboard", quiet: true)
-        self.dashboard
+        @prompt.keypress("Press any key to go back to account settings", quiet: true)
+        self.settings
+    end
+
+    # display merchant details
+    def merchant_details
+        # sanitize terminal
+        self.sanitize
+
+        # display title
+        puts "Merchant Details"
+
+        # show details
+        @animator.display_merchants(@customer.merchants)
+
+        # wait for next action
+        @prompt.keypress("Press any key to go back to account settings", quiet: true)
+        self.settings
     end
 
     # allows current customer to update their name across the database
@@ -231,8 +248,8 @@ class CLI
         puts "*NOTE* Your login details have now changed. Log in using your new name."
 
         # wait for next action
-        @prompt.keypress("Press any key to go back to dashboard", quiet: true)
-        self.dashboard
+        @prompt.keypress("Press any key to go back to account settings", quiet: true)
+        self.settings
     end
 
     # gives customer a new card number (w/ the minting animation)
@@ -265,8 +282,8 @@ class CLI
         )
 
         # wait for next action
-        @prompt.keypress("Press any key to go back to dashboard", quiet: true)
-        self.dashboard
+        @prompt.keypress("Press any key to go back to account settings", quiet: true)
+        self.settings
     end
 
     # gives customer a list of their transaction that they can delete them from their account (one or multiple)
@@ -277,9 +294,32 @@ class CLI
         # display title
         puts "Delete One or More Transactions From Your Account"
 
+        # prompt user to select transactions they wish to delete from account
+        # returns array of transaction ids to delete
+        transactions_to_delete = @prompt.multi_select(
+            "Choose transaction(s) to delete; scroll for more options; deselect all & press enter to cancel:", 
+            show_help: :always, per_page: 10, echo: false
+            ) do |menu|
+            @customer.transactions.order('date DESC').each do |transaction|
+                menu.choice @animator.display_transaction(transaction), transaction.id
+            end
+        end
+
+        # delete transactions from database
+        delete_count = transactions_to_delete.count
+        if delete_count > 0
+            @animator.loading("Deleting #{transactions_to_delete.count} transaction#{"s" unless delete_count == 1}")
+            transactions_to_delete.each do |id|
+                Transaction.delete(id)
+            end
+            puts "Done."
+        else
+            puts "None deleted."
+        end
+
         # wait for next action
-        @prompt.keypress("Press any key to go back to dashboard", quiet: true)
-        self.dashboard
+        @prompt.keypress("Press any key to go back to account settings", quiet: true)
+        self.settings
     end
 
 end
