@@ -17,25 +17,21 @@ class Animator
     # print message w/ elipses
     def loading(message)
         print "#{message}"
-        sleep(0.5)
-        print "."
-        sleep(0.5)
-        print "."
-        sleep(0.5)
-        print "."
+        3.times do
+            sleep(0.5)
+            print "."
+        end
         sleep(0.5)
         print "\n"
     end
 
     # print palette w/ head (string) & body (array of strings)
     def palette(head, body)
-        puts ""
-        puts "*************************************"
+        puts "\n*************************************"
         puts head
         puts ""
         puts body
-        puts "*************************************"
-        puts ""
+        puts "\n*************************************"
     end
 
     # print letter by letter

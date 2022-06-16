@@ -3,12 +3,11 @@
 class CreateCustomers < ActiveRecord::Migration[5.2]
     
     def change
-        # store name, unique card number
         create_table :customers do |t|
             t.string :first_name
             t.string :last_name
             t.integer :card_number
-            # consider adding later: username, password, address, dob, active?
+            # options to consider: username, password, address, birthdate, member since
         end
     end
 
