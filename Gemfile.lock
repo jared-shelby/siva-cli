@@ -1,48 +1,46 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activemodel (5.2.4.4)
-      activesupport (= 5.2.4.4)
-    activerecord (5.2.4.4)
-      activemodel (= 5.2.4.4)
-      activesupport (= 5.2.4.4)
-      arel (>= 9.0)
-    activesupport (5.2.4.4)
+    activemodel (6.1.6)
+      activesupport (= 6.1.6)
+    activerecord (6.1.6)
+      activemodel (= 6.1.6)
+      activesupport (= 6.1.6)
+    activesupport (6.1.6)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-      i18n (>= 0.7, < 2)
-      minitest (~> 5.1)
-      tzinfo (~> 1.1)
-    arel (9.0.0)
-    coderay (1.1.3)
-    concurrent-ruby (1.1.7)
-    faker (2.15.1)
       i18n (>= 1.6, < 2)
-    i18n (1.8.5)
+      minitest (>= 5.1)
+      tzinfo (~> 2.0)
+      zeitwerk (~> 2.3)
+    coderay (1.1.3)
+    concurrent-ruby (1.1.10)
+    faker (2.21.0)
+      i18n (>= 1.8.11, < 2)
+    i18n (1.10.0)
       concurrent-ruby (~> 1.0)
     method_source (1.0.0)
-    minitest (5.14.2)
+    minitest (5.16.0)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
     pastel (0.8.0)
       tty-color (~> 0.5)
-    pry (0.13.1)
+    pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    rack (2.2.3)
-    rack-protection (2.1.0)
+    rack (2.2.3.1)
+    rack-protection (2.2.0)
       rack
     require_all (3.0.0)
-    ruby2_keywords (0.0.2)
-    sinatra (2.1.0)
+    ruby2_keywords (0.0.5)
+    sinatra (2.2.0)
       mustermann (~> 1.0)
       rack (~> 2.2)
-      rack-protection (= 2.1.0)
+      rack-protection (= 2.2.0)
       tilt (~> 2.0)
-    sinatra-activerecord (2.0.21)
+    sinatra-activerecord (2.0.25)
       activerecord (>= 4.1)
       sinatra (>= 1.0)
-    sqlite3 (1.3.13)
-    thread_safe (0.3.6)
+    sqlite3 (1.4.4)
     tilt (2.0.10)
     tty-color (0.6.0)
     tty-cursor (0.7.1)
@@ -54,21 +52,22 @@ GEM
       tty-screen (~> 0.8)
       wisper (~> 2.0)
     tty-screen (0.8.1)
-    tzinfo (1.2.8)
-      thread_safe (~> 0.1)
+    tzinfo (2.0.4)
+      concurrent-ruby (~> 1.0)
     wisper (2.0.1)
+    zeitwerk (2.6.0)
 
 PLATFORMS
-  ruby
+  x86_64-darwin-21
 
 DEPENDENCIES
-  activerecord (~> 5.2)
+  activerecord (~> 6.0)
   faker
   pry
   require_all
   sinatra-activerecord
-  sqlite3 (~> 1.3.6)
+  sqlite3 (~> 1.4)
   tty-prompt
 
 BUNDLED WITH
-   2.1.4
+   2.3.13
