@@ -14,13 +14,19 @@ class CLI
         @animator.sanitize
     end
 
-    # greet w/ logos & wait for user's acknowledgement
+    # run application
+    def run
+        self.greet
+        self.entrance
+    end
+
+    # greet user
     def greet
         @animator.typewriter("Welcome to SIVA.", 0.05)
         @prompt.keypress("Press any key to continue", quiet: true)
     end
 
-    # provide interface prior to logging in as a customer
+    # pre-login options
     def entrance
         action = @prompt.select("Please select an option:", show_help: :always, quiet: true) do |menu|
             menu.choice "Login to SIVA", method(:login)
@@ -30,7 +36,7 @@ class CLI
         action.()
     end
 
-    # provide login interface
+    # login interface
     def login
         # sanitize terminal
         @animator.sanitize
@@ -96,13 +102,13 @@ class CLI
             self.create_account
         end
 
-        # mint new card for new customer
+        # mint card for new customer
         @animator.loading("Minting SIVA card")
         card_number = Faker::Number.unique.number(digits: 16)
         puts "Success! New card minted."
         @animator.loading("Creating your account")
         
-        # create customer
+        # create customer w/ details
         @customer = Customer.create(first_name: name[0], last_name: name[1], card_number: card_number)
 
         # display success message
@@ -112,9 +118,9 @@ class CLI
         @animator.palette(
             "Here's an overview of your new SIVA account:", 
             [
-                "First name: #{@customer.first_name}",
-                "Last name: #{@customer.last_name}",
-                "Card number: #{@customer.card_number}"
+                "* First name: #{@customer.first_name}",
+                "* Last name: #{@customer.last_name}",
+                "* Card number: #{@customer.card_number}"
             ]
         )
 
@@ -133,7 +139,7 @@ class CLI
         exit
     end
 
-    # provide dashboard once customer logs in
+    # post-login dashboard
     def dashboard
         # sanitize terminal
         @animator.sanitize
@@ -150,7 +156,7 @@ class CLI
         action.()
     end
 
-    # provide interface for making a new transaction
+    # interface for creating new transaction
     def transact
         # sanitize terminal
         @animator.sanitize
@@ -184,10 +190,10 @@ class CLI
         @animator.palette(
             "Transaction details:", 
             [
-                "Price: $#{new_transaction.price}",
-                "Date: #{new_transaction.date}",
-                "Customer: #{new_transaction.customer.first_name} #{new_transaction.customer.last_name}",
-                "Merchant: #{new_transaction.merchant.name}"
+                "* Price: $#{new_transaction.price}",
+                "* Date: #{new_transaction.date}",
+                "* Customer: #{new_transaction.customer.first_name} #{new_transaction.customer.last_name}",
+                "* Merchant: #{new_transaction.merchant.name}"
             ]
         )
 
@@ -196,7 +202,7 @@ class CLI
         self.dashboard
     end
 
-    # provide interface for adjusting account settings
+    # interface for adjusting account settings
     def settings
         # sanitize terminal
         @animator.sanitize
@@ -219,8 +225,6 @@ class CLI
 
     # display all account details
     def account_details
-        # add a customer-since attribute?
-        
         # sanitize terminal
         @animator.sanitize
 
@@ -293,8 +297,8 @@ class CLI
         @animator.palette(
             "New name details:", 
             [
-                "First name: #{@customer.first_name}",
-                "Last name: #{@customer.last_name}"
+                "* First name: #{@customer.first_name}",
+                "* Last name: #{@customer.last_name}"
             ]
         )
 
@@ -319,7 +323,7 @@ class CLI
 
         # generate new card
         @animator.loading("Deactivating old card")
-        # add to blacklisted list of cards
+        # add to blacklisted list of cards?
         @animator.loading("Minting new card")
         new_card_number = Faker::Number.unique.number(digits: 16)
         puts "Success! New card minted."
@@ -331,7 +335,7 @@ class CLI
         @animator.palette(
             "New card details:", 
             [
-                "Card number: #{@customer.card_number}"
+                "* Card number: #{@customer.card_number}"
             ]
         )
 
