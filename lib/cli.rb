@@ -22,7 +22,7 @@ class CLI
 
     # greet user
     def greet
-        @animator.typewriter("Welcome to SIVA.", 0.05)
+        @animator.typewriter("Welcome to SIVA, a transaction network that connects customers & merchants.", 0.025)
         @prompt.keypress("Press any key to continue", quiet: true)
     end
 
