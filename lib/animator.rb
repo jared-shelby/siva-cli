@@ -55,8 +55,8 @@ class Animator
 
     # print logos
     def logos
-        puts @logos.siva2
-        puts @logos.subtitle
+        @logos.title
+        @logos.subtitle
     end
 
     # given a transaction instance, print it out to be displayed in one line

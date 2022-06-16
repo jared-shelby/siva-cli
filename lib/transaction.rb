@@ -1,4 +1,4 @@
-# TRANSACTION CLASS
+## TRANSACTION CLASS
 
 class Transaction < ActiveRecord::Base
     
