@@ -6,8 +6,8 @@ class CreateTransactions < ActiveRecord::Migration[6.0]
         create_table :transactions do |t|
             t.decimal :price
             t.string :date
-            t.integer :customer_id
-            t.integer :merchant_id
+            t.references :customer
+            t.references :merchant
             # options to consider: item, datetime
         end
     end
