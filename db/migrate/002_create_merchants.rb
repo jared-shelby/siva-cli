@@ -1,6 +1,6 @@
 ## CREATE MERCHANTS TABLE IN DATABASE
 
-class CreateMerchants < ActiveRecord::Migration[6.0]
+class CreateMerchants < ActiveRecord::Migration[7.0]
     
     def change
         create_table :merchants do |t|
